@@ -1,6 +1,8 @@
 import { OAuthCalendarApp } from "@/ee/calendars/calendars.interface";
 import type { CalendarState } from "@/ee/calendars/controllers/calendars.controller";
 import { CalendarsService } from "@/ee/calendars/services/calendars.service";
+import { sha256Hash, isApiKey, stripApiKey } from "@/lib/api-key";
+import { ApiKeysRepository } from "@/modules/api-keys/api-keys-repository";
 import { AppsRepository } from "@/modules/apps/apps.repository";
 import { CredentialsRepository } from "@/modules/credentials/credentials.repository";
 import { SelectedCalendarsRepository } from "@/modules/selected-calendars/selected-calendars.repository";
@@ -34,8 +36,22 @@ export class GoogleCalendarService implements OAuthCalendarApp {
     private readonly credentialRepository: CredentialsRepository,
     private readonly calendarsService: CalendarsService,
     private readonly tokensService: TokensService,
-    private readonly selectedCalendarsRepository: SelectedCalendarsRepository
+    private readonly selectedCalendarsRepository: SelectedCalendarsRepository,
+    private readonly apiKeysRepository: ApiKeysRepository
   ) {}
+
+  // Resolves a cal.diy user ID from either an OAuth access token or an API key.
+  private async resolveOwnerId(token: string): Promise<number | null> {
+    const fromAccessToken = await this.tokensService.getAccessTokenOwnerId(token);
+    if (fromAccessToken) return fromAccessToken;
+
+    const prefix = this.config.get<string>("api.keyPrefix") ?? "cal_";
+    if (!isApiKey(token, prefix)) return null;
+
+    const hash = sha256Hash(stripApiKey(token, prefix));
+    const keyData = await this.apiKeysRepository.getApiKeyFromHash(hash);
+    return keyData?.userId ?? null;
+  }
 
   async connect(
     authorization: string,
@@ -145,7 +161,7 @@ export class GoogleCalendarService implements OAuthCalendarApp {
 
     const parsedCode = z.string().parse(code);
 
-    const ownerId = await this.tokensService.getAccessTokenOwnerId(accessToken);
+    const ownerId = await this.resolveOwnerId(accessToken);
 
     if (!ownerId) {
       throw new UnauthorizedException("Invalid Access token.");

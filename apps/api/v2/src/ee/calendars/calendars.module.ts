@@ -8,6 +8,7 @@ import { CalendarsService } from "@/ee/calendars/services/calendars.service";
 import { GoogleCalendarService } from "@/ee/calendars/services/gcal.service";
 import { IcsFeedService } from "@/ee/calendars/services/ics-feed.service";
 import { OutlookService } from "@/ee/calendars/services/outlook.service";
+import { ApiKeysRepository } from "@/modules/api-keys/api-keys-repository";
 import { AppsRepository } from "@/modules/apps/apps.repository";
 import { CredentialsRepository } from "@/modules/credentials/credentials.repository";
 import { PrismaModule } from "@/modules/prisma/prisma.module";
@@ -29,6 +30,7 @@ import { Module } from "@nestjs/common";
     IcsFeedService,
     SelectedCalendarsRepository,
     AppsRepository,
+    ApiKeysRepository,
     CalendarsRepository,
     BookingsRepository_2024_08_13,
     BookingReferencesRepository_2024_08_13,
