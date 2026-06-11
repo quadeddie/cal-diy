@@ -523,6 +523,15 @@ class BaseUpdateEventTypeInput {
     default: false,
   })
   showOptimizedSlots?: boolean;
+
+  @IsOptional()
+  @IsString()
+  @DocsPropertyOptional({
+    description:
+      "Custom template for the calendar event title. Use {ATTENDEE}, {HOST}, and {Event type title} as placeholders.",
+    example: "{ATTENDEE} and {HOST}: {Event type title}",
+  })
+  eventName?: string;
 }
 export class UpdateEventTypeInput_2024_06_14 extends BaseUpdateEventTypeInput {
   @IsOptional()

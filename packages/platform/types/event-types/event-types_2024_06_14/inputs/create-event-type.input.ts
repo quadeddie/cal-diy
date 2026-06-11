@@ -584,6 +584,15 @@ export class BaseCreateEventTypeInput {
     default: false,
   })
   showOptimizedSlots?: boolean;
+
+  @IsOptional()
+  @IsString()
+  @DocsPropertyOptional({
+    description:
+      "Custom template for the calendar event title. Use {ATTENDEE}, {HOST}, and {Event type title} as placeholders.",
+    example: "{ATTENDEE} and {HOST}: {Event type title}",
+  })
+  eventName?: string;
 }
 export class CreateEventTypeInput_2024_06_14 extends BaseCreateEventTypeInput {
   @IsOptional()
