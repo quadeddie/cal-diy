@@ -6,6 +6,7 @@ import { GoogleCalendarService as GCalService } from "@/ee/calendars/services/gc
 import { AppsRepository } from "@/modules/apps/apps.repository";
 import { CalUnifiedCalendarsController } from "@/modules/cal-unified-calendars/controllers/cal-unified-calendars.controller";
 import { GoogleCalendarService } from "@/modules/cal-unified-calendars/services/google-calendar.service";
+import { ApiKeysRepository } from "@/modules/api-keys/api-keys-repository";
 import { CredentialsRepository } from "@/modules/credentials/credentials.repository";
 import { PrismaReadService } from "@/modules/prisma/prisma-read.service";
 import { PrismaWriteService } from "@/modules/prisma/prisma-write.service";
@@ -21,6 +22,7 @@ import { Module } from "@nestjs/common";
     GCalService,
     GoogleCalendarService,
     AppsRepository,
+    ApiKeysRepository,
     BookingReferencesRepository_2024_08_13,
     CredentialsRepository,
     CalendarsService,
